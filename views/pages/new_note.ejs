@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../template/head'); %>
+</head>
+
+<body class="container">
+  <header>
+    <%- include('../template/nav'); %>
+  </header>
+
+  <main>
+
+    <div class="container-fluid" id="sighting-content">
+
+      <div class="table-responsive">
+        <form action="/sighting/edit/<%= thisSighting.index %>?_method=PUT" method="POST">
+          <table class="table">
+            <tr>
+              <th>Date/ Time</th>
+              <th class="d-none d-sm-table-cell">Shape</th>
+              <th class="d-none d-sm-table-cell">City</th>
+              <th>State</th>
+              <th>Duration</th>
+            </tr>
+            <tr>
+              <td>
+                <input class="form-control" type="datetime-local" id="date_time" name="date_time" value="<%= thisSighting.date_time %>" />
+              </td>
+              <td>
+                <input class="form-control" type="text" id="shape" name="shape" value="<%= thisSighting.shape %>"/>
+              </td>
+              <td>
+                <input class="form-control" type="text" id="city" name="city" value="<%= thisSighting.city %>"/>
+              </td>
+              <td>
+                <input class="form-control" type="text" id="state" name="state" value="<%= thisSighting.state %>"/>
+              </td>
+              <td><input class="form-control" type="text" id="duration" name="duration" value="<%= thisSighting.duration %>"/></td>
+            </tr>
+            <tr>
+              <td colspan="5"><strong>Summary</strong></td>
+            </tr>
+            <tr>
+              <td colspan="5"><input class="form-control col-lg-4" type="text" id="summary" name="summary" value="<%= thisSighting.summary %>"/></td>
+            </tr>
+            <tr>
+              <td colspan="5"><strong>Full Text</strong></td>
+            </tr>
+            <tr>
+              <td colspan="5"><textarea class="form-control col-lg-4" id="text" name="text" rows=10><%= thisSighting.text %></textarea>
+              </td>
+            </tr>
+          </table>
+          <input class="btn btn-success btn-block" type="submit" value="Submit Edit" />
+        </form>
+      </div>
+  </main>
+
+
+  <footer>
+    <%- include('../template/footer'); %>
+  </footer>
+</body>
+
+</html>

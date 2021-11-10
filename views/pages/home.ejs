@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../template/head'); %>
+</head>
+
+<body class="container">
+  <header>
+    <%- include('../template/nav'); %>
+  </header>
+
+  <main>
+    <div class="jumbotron">
+      <h1>Welcome to UFO Sightings R'Us</h1>
+      <p class="lead">If it ain't here, it ain't exist</p>
+    </div>
+
+
+    </div>
+    <div class="container-fluid" id="sighting-content">
+
+      <div class="table-responsive">
+        <table class="table table-hover">
+
+          <tr class="bg-success">
+            <th>Date/ Time</th>
+            <th><a href="/sort/shape">Shape</a></th>
+            <th><a href="/sort/city">City</a></th>
+            <th><a href="/sort/state">State</a></th>
+            <th id="delete-heading">Delete</th>
+          </tr>
+          <% sightingsArr.forEach((el)=> { %>
+            <tr class="clickable" onclick="window.location='/sighting/<%= el.index %>'">
+              <td>
+                <%= el.date_time %>
+              </td>
+              <td>
+                <%= el.shape %>
+              </td>
+              <td>
+                <%= el.city %>
+              </td>
+              <td>
+                <%= el.state %>
+              </td>
+              <td>
+                <form action="/sighting/delete/<%= el.index %>?_method=DELETE" method="POST">
+                  <input class="btn btn-danger btn-sm" type="submit" value="Delete" />
+                </form>
+              </td>
+            </tr>
+            <% }) %>
+        </table>
+      </div>
+  </main>
+
+
+  <footer>
+    <%- include('../template/footer'); %>
+  </footer>
+</body>
+
+</html>

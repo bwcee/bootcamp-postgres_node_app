@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../template/head'); %>
+</head>
+
+<body class="container">
+  <header>
+    <%- include('../template/nav'); %>
+  </header>
+
+  <main>
+
+    <div class="container-fluid" id="sighting-content">
+
+      <div class="table-responsive">
+        <table class="table">
+          <tr>
+            <th>Date/ Time</th>
+            <th class="d-none d-sm-table-cell">Shape</th>
+            <th class="d-none d-sm-table-cell">City</th>
+            <th>State</th>
+          </tr>
+          <tr>
+            <td>
+              <%= thisSighting.date_time %>
+            </td>
+            <td>
+              <%= thisSighting.shape %>
+            </td>
+            <td>
+              <%= thisSighting.city %>
+            </td>
+            <td>
+              <%= thisSighting.state %>
+            </td>
+          </tr>
+        </table>
+        <h4>Full Text:</h4>
+        <p class="text-justify">
+          <%= thisSighting.text %>
+        </p>
+        <a href="/sighting/edit/<%= thisSighting.index%>" class="btn btn-success btn-block">Click Here to Edit Sighting</a>
+      </div>
+  </main>
+
+
+  <footer>
+    <%- include('../template/footer'); %>
+  </footer>
+</body>
+
+</html>
