@@ -1,67 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <%- include('../template/head'); %>
+  </head>
 
-<head>
-  <%- include('../template/head'); %>
-</head>
+  <body class="container">
+    <header><%- include('../template/nav'); %></header>
 
-<body class="container">
-  <header>
-    <%- include('../template/nav'); %>
-  </header>
+    <main>
+      <div class="container-fluid">
+        <form action="/note" method="POST">
+          <div class="form-group">
+            <label for="habitat">Habitat</label><br />
+            <textarea
+              class="form-control"
+              name="habitat"
+              rows="5"
+              placeholder="Note plant life, water sources and vegetation conditions, as well as which of the plants the bird is preferring as you observe it."
+              required
+            ></textarea>
+          </div>
 
-  <main>
+          <div class="form-group">
+            <label for="date">Date</label><br />
+            <textarea
+              class="form-control"
+              rows="5"
+              name="date"
+              placeholder="Record the date, time and day of the week you are making the observation, as well as how long you were able to see the bird and whether or not you had clear views or just intermittent glimpses."
+            ></textarea>
+          </div>
 
-    <div class="container-fluid" id="sighting-content">
+          <div class="form-group">
+            <label for="appearance">Appearance</label><br />
+            <textarea
+              class="form-control"
+              rows="5"
+              name="appearance"
+              placeholder="Take copious notes on the bird's appearance, including the brilliance of plumage, any peculiar markings and any outstanding or unusual features such as missing feathers, leucistic patches or signs of illness. Record the bird's gender if possible."
+            ></textarea>
+          </div>
 
-      <div class="table-responsive">
-        <form action="/sighting/edit/<%= thisSighting.index %>?_method=PUT" method="POST">
-          <table class="table">
-            <tr>
-              <th>Date/ Time</th>
-              <th class="d-none d-sm-table-cell">Shape</th>
-              <th class="d-none d-sm-table-cell">City</th>
-              <th>State</th>
-              <th>Duration</th>
-            </tr>
-            <tr>
-              <td>
-                <input class="form-control" type="datetime-local" id="date_time" name="date_time" value="<%= thisSighting.date_time %>" />
-              </td>
-              <td>
-                <input class="form-control" type="text" id="shape" name="shape" value="<%= thisSighting.shape %>"/>
-              </td>
-              <td>
-                <input class="form-control" type="text" id="city" name="city" value="<%= thisSighting.city %>"/>
-              </td>
-              <td>
-                <input class="form-control" type="text" id="state" name="state" value="<%= thisSighting.state %>"/>
-              </td>
-              <td><input class="form-control" type="text" id="duration" name="duration" value="<%= thisSighting.duration %>"/></td>
-            </tr>
-            <tr>
-              <td colspan="5"><strong>Summary</strong></td>
-            </tr>
-            <tr>
-              <td colspan="5"><input class="form-control col-lg-4" type="text" id="summary" name="summary" value="<%= thisSighting.summary %>"/></td>
-            </tr>
-            <tr>
-              <td colspan="5"><strong>Full Text</strong></td>
-            </tr>
-            <tr>
-              <td colspan="5"><textarea class="form-control col-lg-4" id="text" name="text" rows=10><%= thisSighting.text %></textarea>
-              </td>
-            </tr>
-          </table>
-          <input class="btn btn-success btn-block" type="submit" value="Submit Edit" />
+          <div class="form-group">
+            <label for="behavior">Behavior</label><br />
+            <textarea
+              class="form-control"
+              rows="5"
+              name="behavior"
+              placeholder="Take notes on what the bird was doing as you observed it. Note general actions and specific reactions to changing conditions, such as the appearance of a predator or how the bird interacts with other birds. Note large actions such as preening, flight patterns, and foraging habits as well as small movements such as tail bobs, head cocks or wing stretches."
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="vocalisation">Vocalisation</label><br />
+            <textarea
+              class="form-control"
+              rows="5"
+              name="vocalisation"
+              placeholder="If the bird sang or made other sounds during your observation, use mnemonics or descriptions of how it sounded. Note non-vocal sounds such as wing noises or drumming."
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="flock_size">Flock Size</label><br />
+            <textarea
+              class="form-control"
+              rows="5"
+              name="flock_size"
+              placeholder="If you are observing more than one bird at a time, try to estimate how many birds are in the flock. Also, try to note how genders are balanced if possible, and check different birds to see if they are the same species or part of a mixed flock."
+            ></textarea>
+          </div>
+
+          <input
+            class="btn btn-success btn-block"
+            type="submit"
+            value="Record New Note"
+          />
         </form>
       </div>
-  </main>
+    </main>
 
-
-  <footer>
-    <%- include('../template/footer'); %>
-  </footer>
-</body>
-
+    <footer><%- include('../template/footer'); %></footer>
+  </body>
 </html>

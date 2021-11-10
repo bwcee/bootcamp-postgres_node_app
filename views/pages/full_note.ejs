@@ -1,54 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <%- include('../template/head'); %>
+  </head>
 
-<head>
-  <%- include('../template/head'); %>
-</head>
+  <body class="container">
+    <header><%- include('../template/nav'); %></header>
 
-<body class="container">
-  <header>
-    <%- include('../template/nav'); %>
-  </header>
-
-  <main>
-
-    <div class="container-fluid" id="sighting-content">
-
-      <div class="table-responsive">
-        <table class="table">
-          <tr>
-            <th>Date/ Time</th>
-            <th class="d-none d-sm-table-cell">Shape</th>
-            <th class="d-none d-sm-table-cell">City</th>
-            <th>State</th>
-          </tr>
-          <tr>
-            <td>
-              <%= thisSighting.date_time %>
-            </td>
-            <td>
-              <%= thisSighting.shape %>
-            </td>
-            <td>
-              <%= thisSighting.city %>
-            </td>
-            <td>
-              <%= thisSighting.state %>
-            </td>
-          </tr>
-        </table>
-        <h4>Full Text:</h4>
-        <p class="text-justify">
-          <%= thisSighting.text %>
-        </p>
-        <a href="/sighting/edit/<%= thisSighting.index%>" class="btn btn-success btn-block">Click Here to Edit Sighting</a>
+    <main>
+      <div class="container-fluid">
+        <h3>Habitat</h3>
+        <p><%= noteContents.habitat %></p>
+        <h3>Date</h3>
+        <p><%= noteContents.date %></p>
+        <h3>Appearance</h3>
+        <p><%= noteContents.appearance %></p>
+        <h3>Behavior</h3>
+        <p><%= noteContents.bahavior %></p>
+        <h3>Vocalisation</h3>
+        <p><%= noteContents.vocalisation %></p>
+        <h3>Flock Size</h3>
+        <p><%= noteContents.flock_size %></p>
+        <a
+          href="/note/edit/<%= noteContents.id%>"
+          class="btn btn-success btn-block"
+          >Click Here to Edit Note</a
+        >
       </div>
-  </main>
+    </main>
 
-
-  <footer>
-    <%- include('../template/footer'); %>
-  </footer>
-</body>
-
+    <footer><%- include('../template/footer'); %></footer>
+  </body>
 </html>

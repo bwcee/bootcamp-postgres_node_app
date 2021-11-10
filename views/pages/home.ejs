@@ -10,13 +10,7 @@
     <%- include('../template/nav'); %>
   </header>
 
-  <main>
-    <div class="jumbotron">
-      <h1>Welcome to UFO Sightings R'Us</h1>
-      <p class="lead">If it ain't here, it ain't exist</p>
-    </div>
-
-
+  
     </div>
     <div class="container-fluid" id="sighting-content">
 
@@ -24,28 +18,36 @@
         <table class="table table-hover">
 
           <tr class="bg-success">
-            <th>Date/ Time</th>
-            <th><a href="/sort/shape">Shape</a></th>
-            <th><a href="/sort/city">City</a></th>
-            <th><a href="/sort/state">State</a></th>
-            <th id="delete-heading">Delete</th>
+            <th>Habitat</th>
+            <th>Date</th>
+            <th>Appearance</th>
+            <th>Behavior</th>
+            <th>Vocalisation</th>
+            <th>Flock Size</th>
+            <th>Delete</th>
           </tr>
-          <% sightingsArr.forEach((el)=> { %>
-            <tr class="clickable" onclick="window.location='/sighting/<%= el.index %>'">
+          <% allNotes.forEach((el)=> { %>
+            <tr class="clickable" onclick="window.location='/note/<%= el.id %>'">
               <td>
-                <%= el.date_time %>
+                <%= el.habitat %>
               </td>
               <td>
-                <%= el.shape %>
+                <%= el.date %>
               </td>
               <td>
-                <%= el.city %>
+                <%= el.appearance %>
               </td>
               <td>
-                <%= el.state %>
+                <%= el.behavior %>
               </td>
               <td>
-                <form action="/sighting/delete/<%= el.index %>?_method=DELETE" method="POST">
+                <%= el.vocalisation %>
+              </td>
+              <td>
+                <%= el.flock_size %>
+              </td>
+              <td>
+                <form action="/note/delete/<%= el.id %>?_method=DELETE" method="POST">
                   <input class="btn btn-danger btn-sm" type="submit" value="Delete" />
                 </form>
               </td>
