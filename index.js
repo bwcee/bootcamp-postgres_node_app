@@ -17,6 +17,16 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride("_method"));
 
+// Error Handler
+const handleError = (err, request)=>{
+if (err){
+  console.error("Error", err)
+} else{
+  
+}
+}
+
+
 // Show Home page
 const goHome = (request, response) => {
   const allQuery = `SELECT * FROM notes`;

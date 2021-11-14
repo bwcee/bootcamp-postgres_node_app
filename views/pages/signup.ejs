@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../template/head'); %>
+  </head>
+
+  <body class="container">
+    <header><%- include('../template/nav'); %></header>
+
+    <main>
+      <div class="container-fluid">
+        <form action="/signup" method="POST">
+          <input type="text" name="email" />
+          <input type="password" name="password" />
+          <input
+            class="btn btn-success btn-block"
+            type="submit"
+            value="Create Your Account"
+          />
+        </form>
+      </div>
+    </main>
+
+    <footer><%- include('../template/footer'); %></footer>
+  </body>
+</html>
