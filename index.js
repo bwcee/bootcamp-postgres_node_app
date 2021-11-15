@@ -143,7 +143,7 @@ const newLogin = (request, response) => {
 
 const doNewLogin = (request, response) => {
   let { input_email, input_password } = request.body;
-  const doLogin = `SELECT password FROM users WHERE email =$1`;
+  const doLogin = `SELECT * FROM users WHERE email =$1`;
   pool.query(doLogin, [input_email], (err, result) => {
     if (err || result.rows.length === 0) {
       handleError(err, result, response);
@@ -152,7 +152,8 @@ const doNewLogin = (request, response) => {
     const userPass = result.rows[0].password;
     if (userPass === input_password) {
       response.cookie("loggedIn", true);
-      response.send("logged in!");
+      response.cookie("userID", result.rows[0].id)
+      response.redirect(301, "/");
     } else {
       response
         .status(403)
@@ -165,7 +166,8 @@ const doNewLogin = (request, response) => {
 // Log-out
 const doLogout = (request, response) => {
   response.clearCookie("loggedIn");
-  response.send("You are logged out");
+  response.clearCookie("userID");
+  response.redirect(301, "/");
 };
 
 ///////////////////////////////////
@@ -182,6 +184,6 @@ app.get("/signup", newSignup);
 app.post("/signup", doNewSignup);
 app.get("/login", newLogin);
 app.post("/login", doNewLogin);
-app.delete("/logout", doLogout);
+app.get("/logout", doLogout);
 
 app.listen(3004);
