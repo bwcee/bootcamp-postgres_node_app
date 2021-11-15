@@ -1,6 +1,7 @@
 import express from "express";
 import pg from "pg";
 import methodOverride from "method-override";
+import cookieParser from "cookie-parser";
 
 const { Pool } = pg;
 
@@ -16,26 +17,29 @@ const app = express();
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride("_method"));
+app.use(cookieParser());
 
-// Error Handler
-const handleError = (err, request)=>{
-if (err){
-  console.error("Error", err)
-} else{
-  
-}
-}
+// SQL query error handling
+const handleError = (err, result, response) => {
+  if (err) {
+    console.error("Error executing error", err.stack);
+    response.status(503).send(result.rows);
+  } else {
+    response.status(403).send("Sorry, no results to show");
+  }
+};
 
-
+///////////////////////////////////
+// Routes Functions
+///////////////////////////////////
 // Show Home page
 const goHome = (request, response) => {
   const allQuery = `SELECT * FROM notes`;
-  pool.query(allQuery, (allQueryErr, allQueryResult) => {
-    if (allQueryErr) {
-      console.error("Error", allQueryErr);
-      return;
+  pool.query(allQuery, (err, result) => {
+    if (err || result.rows.length === 0) {
+      handleError(err, result);
     }
-    let allNotes = allQueryResult.rows;
+    let allNotes = result.rows;
     response.render("pages/home", { allNotes });
   });
 };
@@ -46,9 +50,18 @@ const newNote = (request, response) => {
 };
 
 const doNewNote = (request, response) => {
-  const newNote = request.body;
-  const newNoteQuery = `INSERT INTO notes (habitat, date, appearance, behavior, vocalisation, flock_size) VALUES ('${newNote.habitat}', '${newNote.date}', '${newNote.appearance}', '${newNote.behavior}', '${newNote.vocalisation}', '${newNote.flock_size}')`;
-  pool.query(newNoteQuery);
+  let { habitat, date, appearance, behavior, vocalisation, flock_size } =
+    request.body;
+  const newNoteQuery = `INSERT INTO notes (habitat, date, appearance, behavior, vocalisation, flock_size) VALUES ($1, $2, $3, $4, $5, $6)`;
+  pool.query(
+    newNoteQuery,
+    [habitat, date, appearance, behavior, vocalisation, flock_size],
+    (err, result) => {
+      if (err || result.rows.length === 0) {
+        handleError(err, result);
+      }
+    }
+  );
   response.redirect(301, "/");
 };
 
@@ -56,12 +69,11 @@ const doNewNote = (request, response) => {
 const showNote = (request, response) => {
   const { idToShow } = request.params;
   const noteQuery = `SELECT * FROM notes WHERE id=${idToShow}`;
-  pool.query(noteQuery, (noteQueryErr, noteQueryResult) => {
-    if (noteQueryErr) {
-      console.error("Error", noteQueryErr);
-      return;
+  pool.query(noteQuery, (err, result) => {
+    if (err || result.rows.length === 0) {
+      handleError(err, result);
     }
-    const noteContents = noteQueryResult.rows[0];
+    const noteContents = result.rows[0];
     response.render("pages/full_note", { noteContents });
   });
 };
@@ -70,10 +82,9 @@ const showNote = (request, response) => {
 const deleteNote = (request, response) => {
   const { idToDelete } = request.params;
   const deleteQuery = `DELETE FROM notes WHERE id=${idToDelete}`;
-  pool.query(deleteQuery, (deleteQueryErr, deleteQueryResult) => {
-    if (deleteQueryErr) {
-      console.error("Error", deleteQueryErr);
-      return;
+  pool.query(deleteQuery, (err, result) => {
+    if (err || result.rows.length === 0) {
+      handleError(err, result);
     }
     response.redirect(301, "/");
   });
@@ -83,30 +94,83 @@ const deleteNote = (request, response) => {
 const editNote = (request, response) => {
   const { idToEdit } = request.params;
   const editQuery = `SELECT * FROM notes WHERE id=${idToEdit}`;
-  pool.query(editQuery, (editQueryErr, editQueryResult) => {
-    if (editQueryErr) {
-      console.error("Error", editQueryErr);
-      return;
+  pool.query(editQuery, (err, result) => {
+    if (err || result.rows.length === 0) {
+      handleError(err, result);
     }
-    const noteContents = editQueryResult.rows[0];
+    const noteContents = result.rows[0];
     response.render("pages/edit", { noteContents });
   });
 };
 
 const doEditNote = (request, response) => {
-  const editedNote = request.body;
+  let { habitat, date, appearance, behavior, vocalisation, flock_size } =
+    request.body;
   const { idToEdit } = request.params;
-  console.log(editedNote)
-  const doEditQuery = `UPDATE notes SET habitat= '${editedNote.habitat}', date= '${editedNote.date}', appearance= '${editedNote.appearance}', behavior= '${editedNote.behavior}', vocalisation= '${editedNote.vocalisation}', flock_size= '${editedNote.flock_size}'  WHERE id=${idToEdit}`;
-  pool.query(doEditQuery, (doEditQueryErr, doEditQueryResult) => {
-    if (doEditQueryErr) {
-      console.error("Error", doEditQueryErr);
-      return;
+  const doEditQuery = `UPDATE notes SET habitat= $1, date= $2, appearance= $3, behavior= $4, vocalisation= $5, flock_size= $6  WHERE id=${idToEdit}`;
+  pool.query(
+    doEditQuery,
+    [habitat, date, appearance, behavior, vocalisation, flock_size],
+    (err, result) => {
+      if (err || result.rows.length === 0) {
+        handleError(err, result);
+      }
+      response.redirect(301, "/");
     }
-    response.redirect(301, '/')
-  });
+  );
 };
 
+// Create sign-up
+const newSignup = (request, response) => {
+  response.render("pages/signup");
+};
+
+const doNewSignup = (request, response) => {
+  let { email, password } = request.body;
+  const newSignupQuery = `INSERT INTO users (email, password) VALUES ($1, $2)`;
+  pool.query(newSignupQuery, [email, password], (err, result) => {
+    if (err || result.rows.length === 0) {
+      handleError(err, result);
+    }
+  });
+  response.redirect(301, "/");
+};
+
+// Log-in
+const newLogin = (request, response) => {
+  response.render("pages/login");
+};
+
+const doNewLogin = (request, response) => {
+  let { input_email, input_password } = request.body;
+  const doLogin = `SELECT password FROM users WHERE email =$1`;
+  pool.query(doLogin, [input_email], (err, result) => {
+    if (err || result.rows.length === 0) {
+      handleError(err, result, response);
+      return;
+    }
+    const userPass = result.rows[0].password;
+    if (userPass === input_password) {
+      response.cookie("loggedIn", true);
+      response.send("logged in!");
+    } else {
+      response
+        .status(403)
+        .send("Email or password did not match, pls try again");
+    }
+  });
+  // response.redirect(301, "/");
+};
+
+// Log-out
+const doLogout = (request, response) => {
+  response.clearCookie("loggedIn");
+  response.send("You are logged out");
+};
+
+///////////////////////////////////
+// Routes
+///////////////////////////////////
 app.get("/note", newNote);
 app.post("/note", doNewNote);
 app.get("/note/:idToShow", showNote);
@@ -114,5 +178,10 @@ app.get("/", goHome);
 app.delete("/note/delete/:idToDelete", deleteNote);
 app.get("/note/edit/:idToEdit", editNote);
 app.put("/note/edit/:idToEdit", doEditNote);
+app.get("/signup", newSignup);
+app.post("/signup", doNewSignup);
+app.get("/login", newLogin);
+app.post("/login", doNewLogin);
+app.delete("/logout", doLogout);
 
 app.listen(3004);
